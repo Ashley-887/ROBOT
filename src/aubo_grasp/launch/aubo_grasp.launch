@@ -1,0 +1,20 @@
+<launch>
+  <!-- 启动 MoveIt 相关服务 -->
+  <arg name="robot_model" default="aubo_i5" />
+  <include file="$(find aubo_moveit_config)/launch/moveit_planning_execution.launch">
+    <arg name="robot_model" value="$(arg robot_model)" />
+  </include>
+
+  <!-- 定义机械爪的开闭角度参数 -->
+  <arg name="open_angle" default="0.2" />
+  <arg name="close_angle" default="1.0" />
+
+  <!-- 启动 GripperControl 节点，传入开闭角度参数 -->
+  <node name="gripper_control_node" pkg="aubo_grasp" type="gripper_control.py" output="screen">
+    <param name="open_angle" value="$(arg open_angle)" />
+    <param name="close_angle" value="$(arg close_angle)" />
+  </node>
+
+  <!-- 启动自定义抓取节点 -->
+  <node name="aubo_grasp_node" pkg="aubo_grasp" type="aubo_grasp_node.py" output="screen" />
+</launch>
